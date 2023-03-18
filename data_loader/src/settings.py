@@ -1,28 +1,37 @@
-import os
 from dotenv import load_dotenv
 import logging
+
+from src.utils import get_env_var
+
+
+# Utils
 
 load_dotenv()
 logger = logging.getLogger(__name__)
 
-# TODO: Move .env and .env.sample files to data_loader dir
+
+# DB settings
+
 DB_CREDENTIALS = {
-    "host": os.environ.get("DB_HOST", "localhost"),
-    "port": os.environ.get("DB_PORT", "5432"),
-    "user": os.environ.get("DB_USER", "db_user"),
-    "password": os.environ.get("DB_PASSWORD", "db_pass"),
-    "database": os.environ.get("DB_NAME", "db_name"),
+    "host": get_env_var("DB_HOST", "localhost"),
+    "port": get_env_var("DB_PORT", "5432"),
+    "user": get_env_var("DB_USER", "db_user"),
+    "password": get_env_var("DB_PASSWORD", "db_pass"),
+    "database": get_env_var("DB_NAME", "db_name"),
 }
 
-# API credentials
-# TODO: Add a callback which logs if env var is not defined
-API_URL = os.environ.get("RAPIDAPI_URL", "https://example.com/")
+
+# API settings
+
+API_URL = get_env_var("RAPIDAPI_URL", "https://example.com/")
 API_HEADERS = {
-    "x-rapidapi-host": os.environ.get("RAPIDAPI_HOST", "host"),
-    "x-rapidapi-key": os.environ.get("RAPIDAPI_KEY", "secret_key"),
+    "x-rapidapi-host": get_env_var("RAPIDAPI_HOST", "host"),
+    "x-rapidapi-key": get_env_var("RAPIDAPI_KEY", "secret_key"),
 }
 
-# API search params
+API_FETCH_PERIOD_SECS = 600
+
+# Search params
 PAGE_NUMBER = 1
 PAGE_SIZE = 5
 AUTO_CORRECT = True
@@ -33,6 +42,3 @@ API_QUERY_STRING = {
     "autoCorrect": AUTO_CORRECT,
     "safeSearch": SAFE_SEARCH,
 }
-
-
-FETCH_PERIOD_SECS = 600

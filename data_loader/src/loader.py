@@ -1,32 +1,40 @@
-from data_loader.decorators import async_db_connect
-import asyncpg
-import asyncio
 import logging
-from data_loader.settings import FETCH_PERIOD_SECS
+from typing import List, Dict
+
+import asyncpg
+from aiohttp import ClientSession
+from asyncpg import Connection
+from src.queries import INSERT_ARTICLES_QUERY
+from src.settings import API_URL, API_QUERY_STRING, API_HEADERS
 
 logger = logging.getLogger(__name__)
 
 
-# TODO: Use typehints
-async def fetch_articles():
-    """Fetch articles from 3rd party API."""
-    # TODO: Use aiohttp to get data
-    pass
+class ArticlesLoaderService:
+    """
+    Fetch articles from 3rd-party API and save them to the database.
+    """
 
+    def __init__(self, connection: Connection):
+        self.connection = connection
 
-@async_db_connect()
-async def main(connection):
-    # TODO: Handle API errors as well
-    while True:
-        articles = await fetch_articles()
-        logger.info(articles)
-        await asyncio.sleep(FETCH_PERIOD_SECS)
+    async def _fetch_articles(self) -> Dict:
+        """Fetch articles from 3rd party API."""
 
+        async with ClientSession() as client:
+            response = await client.get(
+                API_URL, params=API_QUERY_STRING, headers=API_HEADERS)
+            logger.info(response.status)
+            logger.info(type(response.json()))
+            return response.json()
 
-if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    task = loop.create_task(main())
-    try:
-        loop.run_until_complete(task)
-    except asyncio.CancelledError as e:
-        logger.info(str(e))
+    async def _save_articles(self, articles: Dict):
+        """Save articles to database."""
+        # https://stackoverflow.com/a/43780057/11330677
+
+    async def execute(self):
+        # TODO: Handle API errors as well
+        articles_data = await self._fetch_articles()
+        result = self._save_articles(articles_data)
+
+        return result

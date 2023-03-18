@@ -1,15 +1,17 @@
 import functools
+from typing import Awaitable, Callable
+
 import asyncpg
-from data_loader.settings import DB_CREDENTIALS
+from asyncpg import Connection
+from src.settings import DB_CREDENTIALS
 
 
-# TODO: Use typehints
-def async_db_connect():
+def async_db_connect() -> Callable:
     """Connect to db and pass connection to wrapped function."""
-    def wrapper(func):
+    def wrapper(func: Callable) -> Callable:
         @functools.wraps(func)
-        async def wrapped(*args, **kwargs):
-            connection = await asyncpg.connect(**DB_CREDENTIALS)
+        async def wrapped(*args, **kwargs) -> Awaitable:
+            connection: Connection = await asyncpg.connect(**DB_CREDENTIALS)
             try:
                 return await func(connection=connection, *args, **kwargs)
             finally:
