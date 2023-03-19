@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 async def main(connection: Connection):
     """Periodically fetch data from 3rd-party API and save it to DB."""
     service = ArticlesLoaderService(connection)
-
+    # TODO: Add logs when the script starts, ends or throws error
     while True:
         result = await service.execute()
         logger.info(result)
