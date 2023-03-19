@@ -1,32 +1,40 @@
-import logging
 import asyncio
+import logging
 
-from asyncpg import Connection
-from src.decorators import async_db_connect
-from src.loader import ArticlesLoaderService
-
+from src import consts
+from src.services import ArticlesLoaderService
 from src.settings import API_FETCH_PERIOD_SECS
 
 
+# Logging configuration
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-@async_db_connect()
-async def main(connection: Connection):
+async def main():
     """Periodically fetch data from 3rd-party API and save it to DB."""
-    service = ArticlesLoaderService(connection)
-    # TODO: Add logs when the script starts, ends or throws error
+
+    logger.info(consts.START_APP_MSG)
+    service = ArticlesLoaderService()
+
+    # TODO: Logs: format, files, multiple configurations
+    # Log request params, output and etc. Write everything to .log file
+    # Use different logger configs and files for default flow and errors/warnings
+
     while True:
-        result = await service.execute()
-        logger.info(result)
-        await asyncio.sleep(API_FETCH_PERIOD_SECS)
+        try:
+            result = await service.execute()
+            logger.info(result)
+        except Exception as e:
+            logger.warning(consts.ERROR_DURING_ITER_MSG)
+            logger.error(e)
+        finally:
+            await asyncio.sleep(API_FETCH_PERIOD_SECS)
 
 
 if __name__ == '__main__':
-    # Deprecated
-    # Check out this: https://stackoverflow.com/a/73367187/11330677
-    # loop = asyncio.get_event_loop()
-    # task = loop.create_task(check_pg_version())
-    # loop.run_until_complete(task)
-
-    asyncio.run(main())
+    # https://stackoverflow.com/a/73367187/11330677
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logger.info(consts.CLOSE_APP_MSG)

@@ -38,10 +38,8 @@ PAGE_SIZE = 20
 # https://github.com/aio-libs/aiohttp/issues/4874
 AUTO_CORRECT = "true"
 SAFE_SEARCH = "false"
-# TODO: Instead of hardcoding "q" param use randomizer
-# Also handle empty results
 API_QUERY_STRING = {
-    "q": "taylor swift",
+    # "q": "taylor swift",      # For tests
     "pageNumber": PAGE_NUMBER,
     "pageSize": PAGE_SIZE,
     "autoCorrect": AUTO_CORRECT,
