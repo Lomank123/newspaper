@@ -1,14 +1,14 @@
-from dotenv import load_dotenv
-import logging
+import logging.config
+import os
+from pathlib import Path
 
+from dotenv import load_dotenv
 from src.utils import get_env_var
 
-
-# Utils
-
 load_dotenv()
-logger = logging.getLogger(__name__)
 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # DB settings
 
@@ -45,3 +45,8 @@ API_QUERY_STRING = {
     "autoCorrect": AUTO_CORRECT,
     "safeSearch": SAFE_SEARCH,
 }
+
+
+# Logging
+
+logging.config.fileConfig(os.path.join(BASE_DIR, 'logging.conf'))

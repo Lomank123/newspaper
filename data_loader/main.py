@@ -5,9 +5,6 @@ from src import consts
 from src.services import ArticlesLoaderService
 from src.settings import API_FETCH_PERIOD_SECS
 
-
-# Logging configuration
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -16,10 +13,6 @@ async def main():
 
     logger.info(consts.START_APP_MSG)
     service = ArticlesLoaderService()
-
-    # TODO: Logs: format, files, multiple configurations
-    # Log request params, output and etc. Write everything to .log file
-    # Use different logger configs and files for default flow and errors/warnings
 
     while True:
         try:

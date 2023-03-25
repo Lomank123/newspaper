@@ -3,9 +3,8 @@ from typing import Dict, List
 
 from asyncpg import Connection, PostgresError
 from dateutil import parser
-from src.queries import INSERT_ARTICLES_QUERY
 from src import consts
-
+from src.queries import INSERT_ARTICLES_QUERY
 
 logger = logging.getLogger(__name__)
 
