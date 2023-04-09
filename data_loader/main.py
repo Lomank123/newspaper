@@ -21,8 +21,8 @@ async def main():
         except Exception as e:
             logger.warning(consts.ERROR_DURING_ITER_MSG)
             logger.error(e)
-        finally:
-            await asyncio.sleep(API_FETCH_PERIOD_SECS)
+        # Repeat after given period of time
+        await asyncio.sleep(API_FETCH_PERIOD_SECS)
 
 
 if __name__ == '__main__':
@@ -30,4 +30,5 @@ if __name__ == '__main__':
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
+        # CTRL + C interrupt handler
         logger.info(consts.CLOSE_APP_MSG)

@@ -21,21 +21,14 @@ class ArticlesLoaderService:
         """Fetch articles from 3rd party API."""
 
         async with ClientSession() as client:
-            params = {
-                "q": generate_random_sentence(),
-                **API_QUERY_STRING,
-            }
+            params = {"q": generate_random_sentence(), **API_QUERY_STRING}
             try:
                 response = await client.get(
                     API_URL, params=params, headers=API_HEADERS)
-
-                # Log necessary data
-                logger.info(params)
-                logger.info(f"Response status: {response.status}")
-
                 articles_data = await response.json()
                 return articles_data.get('value', list())
             except Exception as e:
+                # Log error & return empty list
                 logger.warning(consts.ERROR_ON_DATA_FETCH_MSG)
                 logger.error(e)
                 return list()

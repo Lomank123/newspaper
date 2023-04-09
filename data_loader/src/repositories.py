@@ -32,14 +32,12 @@ class ArticlesRepository:
         status = consts.SUCCESS_STATUS
         msg = f"Successfully inserted {len(articles)} item(s)."
 
-        # https://magicstack.github.io/asyncpg/current/api/index.html#asyncpg.connection.Connection.executemany
-        # executemany returns None if succeeded
-
-        # TODO: Perhaps there should be Parent class with similar error handling logic
         try:
+            # executemany returns None if succeeded
             await self.connection.executemany(
                 INSERT_ARTICLES_QUERY, insert_values)
         except PostgresError as e:
+            # Log error & set msg with status
             logger.warning(consts.ERROR_ON_INSERT_MSG)
             logger.error(e)
             status = consts.ERROR_STATUS
