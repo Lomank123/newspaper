@@ -1,25 +1,23 @@
 from fastapi import FastAPI
-from src.services import CreateArticleService, GetArticleService
+from fastapi.responses import HTMLResponse
+from src.routes import api_router
 
 app = FastAPI()
 
-
-@app.get("/")
-async def articles_list():
-    service = GetArticleService()
-    data = service.get_list()
-    return data
+# Routing
+app.include_router(api_router, prefix='/api/v1')
 
 
-@app.get('/{id}')
-async def article_by_id(id: int):
-    service = GetArticleService()
-    data = service.filter_by()
-    return data
-
-
-@app.post("/")
-async def create_article():
-    service = CreateArticleService()
-    data = service.create()
-    return data
+# TODO: Remove after tests
+@app.get("/", response_class=HTMLResponse)
+async def home():
+    return """
+    <html>
+        <head>
+            <title>Some HTML in here</title>
+        </head>
+        <body>
+            <h1>Look ma! HTML!</h1>
+        </body>
+    </html>
+    """
