@@ -1,9 +1,13 @@
 from src.server import serve
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 def main():
     """Entrypoint. Run GRPC server and listen to incoming requests."""
-    # TODO: Add logging here
+    logger.warning('Starting GRPC server...')
     serve()
 
 

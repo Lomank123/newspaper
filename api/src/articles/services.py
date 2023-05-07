@@ -1,20 +1,23 @@
-class GetArticleService:
+import grpc
+import schema_pb2_grpc as pb2_grpc
+import schema_pb2 as pb2
+
+
+class ArticleService:
     """Fetch article(s) from outer service."""
 
-    def filter_by(self, **kwargs):
-        return {'data': {'id': 1, 'title': 'default'}}
+    def __init__(self):
+        # TODO: Move to consts
+        self.host = 'localhost'
+        self.port = 50051
+
+        self.channel = grpc.insecure_channel(f'{self.host}:{self.port}')
+        self.stub = pb2_grpc.ArticlesStub(self.channel)
 
     def get_list(self, **kwargs):
-        articles = [
-            {'id': 1, 'title': 'default'},
-            {'id': 2, 'title': 'default 2'},
-        ]
-        return {'data': articles}
+        """Return list of articles."""
 
+        request = pb2.GetArticleRequest(id=4)
 
-# TODO: Perhaps you should move it to the above service
-class CreateArticleService:
-    """Create article using outer service."""
-
-    def create(self, **kwargs):
-        return {'data': {'id': 3, 'title': 'new default 3'}}
+        response = self.stub.GetServerResponse(request)
+        return {'data': response.title}
