@@ -1,4 +1,5 @@
 python-dotenv==0.20.0
+asyncpg==0.27.0
 
 # GRPC
 grpcio==1.54.0

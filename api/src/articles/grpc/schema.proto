@@ -3,14 +3,24 @@ syntax = "proto3";
 package articles;
 
 service Articles{
-  // A simple RPC.
-  rpc GetServerResponse(GetArticleRequest) returns (GetArticleResponse) {}
+  rpc ArticleListResponse(ArticleListRequest) returns (ArticleList) {}
 }
 
-message GetArticleRequest{
-  int32 id = 1;
+message ArticleListRequest {}
+
+message ArticleList {
+  repeated Article article = 1;
 }
 
-message GetArticleResponse{
-  string title = 1;
+message Article {
+  int64 id = 1;
+  string api_id = 2;
+  string title = 3;
+  string url = 4;
+  string description = 5;
+  string body = 6;
+  string snippet = 7;
+  string img_url = 8;
+  string language = 9;
+  string published_at = 10;
 }

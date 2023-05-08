@@ -1,15 +1,22 @@
-from src.server import serve
+import asyncio
 import logging
 
+import asyncpg
+from src.server import serve
+from src.settings import DB_CREDENTIALS
 
 logger = logging.getLogger(__name__)
 
 
-def main():
+async def main():
     """Entrypoint. Run GRPC server and listen to incoming requests."""
+    # Acquire db connection
+    connection = await asyncpg.connect(**DB_CREDENTIALS)
+
     logger.warning('Starting GRPC server...')
-    serve()
+    # Run server
+    await serve(connection)
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())

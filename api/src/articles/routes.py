@@ -9,5 +9,4 @@ router = APIRouter()
 async def articles_list():
     # TODO: Handle case when grpc server is unavailable
     service = ArticleService()
-    data = service.get_list()
-    return data
+    return await service.get_list()
