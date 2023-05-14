@@ -1,12 +1,17 @@
+import logging
+
+from fastapi import APIRouter, Response
+from fastapi.responses import JSONResponse
 from src.articles.services import ArticleService
-from fastapi import APIRouter
+
+logger = logging.getLogger(__name__)
 
 
 router = APIRouter()
 
 
 @router.get('/')
-async def articles_list():
-    # TODO: Handle case when grpc server is unavailable
+async def articles_list() -> Response:
     service = ArticleService()
-    return await service.get_list()
+    articles_list = await service.get_list()
+    return JSONResponse(content=articles_list)
