@@ -14,4 +14,8 @@ router = APIRouter()
 async def articles_list() -> Response:
     service = ArticleService()
     articles_list = await service.get_list()
+
+    # Close GRPC channel gracefully
+    await service.close_channel()
+
     return JSONResponse(content=articles_list)

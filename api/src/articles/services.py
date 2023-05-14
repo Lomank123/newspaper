@@ -13,21 +13,12 @@ from src.settings import GRPC_HOST, GRPC_PORT
 logger = logging.getLogger(__name__)
 
 
-# TODO: Resolve mypy issues (google how to disable missing imports)
 class ArticleService:
     """Fetch article(s) from outer service."""
 
     def __init__(self) -> None:
         self.channel = aio.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
         self.stub = pb2_grpc.ArticlesStub(self.channel)
-
-    # TODO: Resolve how to set types to *excinfo args
-    # https://stackoverflow.com/questions/37031928/type-annotations-for-args-and-kwargs
-    async def __aexit__(self, *excinfo) -> None:
-        """Close grpc connection when the job is done or exception raised."""
-        # TODO: Test this (for now in api no logs appeared)
-        logger.warning('Closing channel...')
-        await self.channel.close()
 
     def _build_data(
         self, data: Dict, status: int, error: Dict = dict()
@@ -39,7 +30,13 @@ class ArticleService:
         }
 
     def _build_json(self, data: Dict) -> Any:
+        """Return json encoded data."""
         return jsonable_encoder(data)
+
+    async def close_channel(self) -> None:
+        """Close `self.channel` gracefully."""
+        logger.warning('Closing channel...')
+        await self.channel.close()
 
     async def get_list(self) -> Dict:
         """Return list of articles."""
